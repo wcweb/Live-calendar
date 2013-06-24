@@ -1,0 +1,52 @@
+h1 Sinatra File Upload
+
+- if @flash
+  = @flash
+
+div.jwplayer id="player"
+div.flash id="flashcontent"
+  p hellowrod
+
+javascript:
+	$(document).ready(function(){
+			jwplayer("player").setup({
+			    file: 'assets/video.mp4',
+			    flashplayer: 'assets/AvaPlayer.swf',
+			    height: 270,
+			    plugins: {
+			    	   'assets/cueboy.swf': {
+				      			dockname:'哇哈哈22',
+					      		heading: '我的小宇宙，我的兄弟们',
+					      		dimensions:'100x50',
+					     		file: 'assets/empty.xml',
+								repeatable:false,
+					        	onclick :'play'
+				    		}
+			        
+			    },
+			    width: 480
+			});
+	});
+
+javascript:
+  	var flashvars = {};
+	flashvars.bridgeName = "example";
+	var params = {};
+	var attributes = {};
+	attributes.id = "flexApp";
+	attributes.name = "flexApp";
+	flashvars.url ="";
+	flashvars.lc_name = "lc_arrow"; 
+	swfobject.embedSWF("Paraket-debug.swf", "flashcontent", "500", "300", "10.0.124", "", flashvars, params, attributes);
+
+
+form action='/upload' method='post' enctype='multipart/form-data'
+  p
+    input type='file' name='file'
+  p
+    input type='submit' value='Upload'
+h3 Files
+ul
+  - @files.each do |file|
+    li
+      a href='files/#{file}' #{file}

@@ -1,0 +1,25 @@
+h1 Sinatra File Upload
+
+- if @flash
+  = @flash
+
+div.jwplayer id="player"
+div.flash id="flashcontent"
+  p hellowrod
+
+
+
+javascript:
+  	var flashvars = {};
+	flashvars.bridgeName = "example";
+	var params = {};
+	var attributes = {};
+	attributes.id = "flexApp";
+	attributes.name = "flexApp";
+	flashvars.url ="";
+	flashvars.files ="assets/clips.xml";
+	flashvars.lc_name = "lc_arrow"; 
+	swfobject.embedSWF("test.swf", "flashcontent", "700", "300", "10.0.124", "", flashvars, params, attributes);
+
+
+
