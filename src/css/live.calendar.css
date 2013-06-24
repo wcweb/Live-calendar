@@ -13,22 +13,24 @@
     list-style:none;
 }
 .timeline {
-    position:absolute;
-    width:50px;
-    height:240px;
-    top:0;
-    left:0;
-    bottom: 0;
-    text-align:center;
+
+    text-align:left;
 }
 
 .timeline .aweek {
-    margin-left: 0;
+    margin: 0;
+	
+letter-spacing:-4px;
+
+
+font-size:0;
 }
 .timeline .aweek li {
-    width:50px;
-    height:30px;
-    margin:0 auto;
+	margin:0px;
+	letter-spacing:normal;
+}
+.aweek li a.btn{
+	width:58px;
 }
 .timeline .aweek .pre{
 
@@ -80,6 +82,7 @@
     background:#FCFCFC;
     margin-bottom:5px;
     position:relative;
+	width:80px;
 }
 .event_time {
     width:50px;
@@ -111,32 +114,34 @@ li.event_status {
 	width:80px;
 	height:100%;
 	display:inline-block;
-	margin-right:5px;
+	*display:inline;
+	overflow:hidden;
+	*zoom:1;
 }
 .col li.event_status{
 	width:auto;
 	position:relative;
 }
-
-.hor .timeline .aweek li{
+ul.aweek li{
 	position:relative;
-	display:inline;
+	display:inline-block;
+	*display:inline;
 	margin:0px;
+	padding:0px;
+	overflow:hidden;
 	
 }
-.hor .timeline .aweek li .btn{
-	width:60px;
 
-}
+
 .hor .timeline .aweek li.operator{
 	width:100%;
 	display:block;
-	padding-right:40px;
+	padding-right:0px;
 }
 .operator ul{
 	width:100%;
 	margin-left:0;
-
+	overflow:hidden;
 }
 .timeline .aweek li.operator .pre{
 	float:left;
