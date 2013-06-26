@@ -172,11 +172,11 @@
 						'<li class="event_classroom"><%= sde.LiveInfo[jx].classroom%></li>' +
 						'<li class="event_course"><%= sde.LiveInfo[jx].course.substring(0,6) %></li>' +
             '</li>' +
-
-            //' <li class="event_status <%= sde.LiveInfo[jx].status%>">' +
-            //' <a href="#" class="btn"><%= sde.LiveInfo[jx].status%></a>' +
-
-            //' </li>' +
+						' <% if( sde.LiveInfo[jx].status !=null ){ %>'+
+            ' <li class="event_status" style="background-color:<%= sde.LiveInfo[jx].color %>' +
+            ' <a href="#" class="btn"><%= sde.LiveInfo[jx].status %></a>' +
+            ' </li>' +
+						'<% } %>' +
             ' </ul>' +
 						'<% } %>' +
 		        '<% } %>' +
@@ -310,7 +310,7 @@
                     this.middleDay = moment(this.middleDay).add('d', 7);
                     this.renderCalendar(getSevenDays(this.middleDay));
                 } else {
-                    this.middleDay = moment(this.middleDay).add('d', 7);
+                    this.middleDay = moment(this.middleDay).add('d', 1);
                     this.renderCalendar(getSevenDays(this.middleDay));
                 }
 
