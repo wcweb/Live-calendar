@@ -7,7 +7,7 @@
  */
 .live_schedule {
     position:relative;
-    width:574px;
+    width: 784px;
 }
 .live_schedule ul {
     list-style:none;
@@ -30,7 +30,7 @@ font-size:0;
 	letter-spacing:normal;
 }
 .aweek li a.btn{
-	width:58px;
+	width: 90px;
 }
 .timeline .aweek .pre{
 
@@ -79,16 +79,25 @@ font-size:0;
 }
 .event {
     margin:0;
-    background:#FCFCFC;
-    margin-bottom:5px;
+/*    background:#FCFCFC;*/
+    margin-bottom: 15px;
     position:relative;
-	width:80px;
+		
+    width: 100px;
 }
-.event_time {
-    width:50px;
+.event_time ,.event_course , .event_classroom{
+		background:#F3F3F3;
+		font-size: 8px;
+		line-height: 12px;
+		text-align: right;
 }
+
 .event_title {
     text-align:left;
+    background:#FCFCFC;
+		font-size:20px;
+		padding-bottom:5px;
+		border-bottom:1px solid #08c;
 }
 li.event_status {
     position:absolute;
@@ -111,12 +120,14 @@ li.event_status {
 	margin-top:30px;
 }
 .col{
-	width:80px;
+	width: 107px;
 	height:100%;
 	display:inline-block;
 	*display:inline;
 	overflow:hidden;
 	*zoom:1;
+	vertical-align:top;
+	margin-left: 5px;
 }
 .col li.event_status{
 	width:auto;

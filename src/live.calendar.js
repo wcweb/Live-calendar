@@ -129,105 +129,59 @@
             msg_months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
             msg_today: 'Today',
             msg_events_today: 'Events Today', // when today click.
-            url: "http://0.0.0.0:9292/schedule",
+            url: "",
             events: null
         },
         timeline_template = tmpl('<div class="timeline">' +
             '<ul class="aweek btn-group">' +
-						'<li class="operator"><ul>'+
+						'<li class="operator"><ul>' +
 						'<li class="fast pre">' +
-            '<a href="#" class="btn">&lt&lt</a>' +
+            '<a href="#" class="btn">上一周</a>' +
             '</li>' +
-						'<li class="divid"></li>'+
+						'<li class="divid"></li>' +
             '<li class="pre">' +
             '<a href="#" class="btn">&lt</a>' +
             '</li>' +
-           
             '<li class="next">' +
             '<a href="#" class="btn">&gt</a>' +
             '</li>' +
             '<li class="fast next">' +
-            '<a href="#" class="btn">&gt&gt</a>' +
+            '<a href="#" class="btn">下一周</a>' +
             '</li></ul></li>' +
 						 '<% for (var i = 0, length = seven_day.length; i < length; i ++) { %>' +
-	            '<li class="" id="day_<%= seven_day[i].getDate() %>">' +
-	            '<a href="#" class="btn"> <%= moment(seven_day[i]).format(\'MMM\') %><%= seven_day[i].getDate() %><br/><%= moment(seven_day[i]).format(\'dddd\') %></a>' +
+	            '<li class="" id="day_<%= seven_day[i] %>">' +
+	            '<a href="#" class="btn"> <%= seven_day[i].format("ddd") %><br/><%= seven_day[i].date() %></a>' +
 	            '</li>' +
 	            '<% } %>' +
-            
+
             '</ul>' +
             '</div>'),
-        
-        //{:result=>[
-        //            {
-        //                :date => "2013.5.12",
-        //                :events=>[
-        //                    {:time =>"30:00",:title=>"title for this one",:status=>"onlive"},
-        //                    {:time =>"50:00",:title=>"title for this one",:status=>"wait"}
-        //                ]},
-				
-        /*events_list_template = '<div class="event_table accordion" id="accordion_event_table">' +
+
+       
+				events_list_template = '<div class="event_table accordion" id="accordion_event_table" >' +
 
         '<% for (var ix = 0, lengthx = seven_day_events.length; ix < lengthx; ix ++) { %>' +
-           
-        '<div id="day_<%= seven_day_events[ix].date.substr(-2) %>" class=" event_content accordion-group">' +
-            '<div class="event_header accordion-heading">' +
-            '<a href="#event_<%= seven_day_events[ix].date.substr(-2) %>" class="accordion-toggle" data-toggle="collapse">' +
-            '<i class="event_row_oper icon-plus"></i>' +
-            '<%= seven_day_events[ix].date %>' +
-            '<span></span>' +
-            '</a>' +
-            '</div>' +
-            '<!-- /header -->' +
-            '<div class="event_body accordion-body in" id="event_<%= seven_day_events[ix].date.substr(-2) %>">' +
-            '<div class="accordion-inner">' +
-
-        '<% for (var jx = 0, lengthy = seven_day_events[ix].events.length; jx < lengthy; jx ++) { %>' +
+						'<div class="col">' +
+						'<% if (seven_day_events[ix].length>0){ %>' +
+				'<% for (var jx = 0 ,sde=seven_day_events[ix][0], lengthy = seven_day_events[ix][0].LiveInfo.length; jx < lengthy; jx ++) { %>' +
             ' <ul class="event">' +
-            '<li class="event_time"><%= seven_day_events[ix].events[jx].time%></li>' +
+            
             '<li class="event_title">' +
-            '<a href="#"><%= seven_day_events[ix].events[jx].title%></a>' +
-						'<%= seven_day_events[ix].events[jx].classroom%>'+
-						'<%= seven_day_events[ix].events[jx].course%>'+
+            '<a href="<%= sde.LiveInfo[jx].url %>"><%= sde.LiveInfo[jx].title.substring(0,10) %></a>' +
+						'<li class="event_time"><%= sde.LiveInfo[jx].time%></li>' +
+						'<li class="event_classroom"><%= sde.LiveInfo[jx].classroom%></li>' +
+						'<li class="event_course"><%= sde.LiveInfo[jx].course.substring(0,6) %></li>' +
             '</li>' +
-						
-            ' <li class="event_status <%= seven_day_events[ix].events[jx].status%>">' +
-            ' <a href="#" class="btn"><%= seven_day_events[ix].events[jx].status%></a>' +
-						
-            ' </li>' +
+
+            //' <li class="event_status <%= sde.LiveInfo[jx].status%>">' +
+            //' <a href="#" class="btn"><%= sde.LiveInfo[jx].status%></a>' +
+
+            //' </li>' +
             ' </ul>' +
-            '<% } %>' +
-
-        '</div>' +
-            ' </div>' +
-            '<!-- /body -->' +
-            ' </div>' +
-
-
-        '<% } %>' +
-
-        '</div>',*/
-				events_list_template ='<div class="event_table accordion" id="accordion_event_table">' +
-
-        '<% for (var ix = 0, lengthx = seven_day_events.length; ix < lengthx; ix ++) { %>' +
-						'<div class="col">'+
-				'<% for (var jx = 0, lengthy = seven_day_events[ix].events.length; jx < lengthy; jx ++) { %>' +
-            ' <ul class="event">' +
-            '<li class="event_time"><%= seven_day_events[ix].events[jx].time%></li>' +
-            '<li class="event_title">' +
-            '<a href="#"><%= seven_day_events[ix].events[jx].title%></a>' +
-						'<li class="classroom_live_table"><%= seven_day_events[ix].events[jx].classroom%></li>'+
-						'<li class="classroom_live_table"><%= seven_day_events[ix].events[jx].course%></li>'+
-            '</li>' +
-						
-            ' <li class="event_status <%= seven_day_events[ix].events[jx].status%>">' +
-            ' <a href="#" class="btn"><%= seven_day_events[ix].events[jx].status%></a>' +
-						
-            ' </li>' +
-            ' </ul>' +
+						'<% } %>' +
 		        '<% } %>' +
-							'</div>'+
-            '<% } %>' ,
+							'</div>' +
+            '<% } %>',
         daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
 
         today = new Date();
@@ -261,93 +215,77 @@
         this.msg_today = this.options.msg_today;
         this.msg_events_hdr = this.options.msg_events_header;
         this.events = this.options.events;
-
-        //        this.calendar = $(timeline_template.replace("%msg_today%", this.msg_today)).appendTo(this.element).on({
-        //            click: $.proxy(this.click, this)
-        //        });
-
-
+        this.url = this.options.url;
 
         this.live_date = new Date();
 
-        var now = new Date();
-        this.mm = now.getMonth();
-        this.yy = now.getFullYear();
-        this.today = now.getDate();
-        this.middleDay = new Date();
-
-        var mon = new Date(this.yy, this.mm, 1);
-        this.yp = mon.getFullYear();
-        this.yn = mon.getFullYear();
-
-        // this.url = "http://0.0.0.0:9292/schedule"
-
-        if (this.component) {
-            this.component.on('click', $.proxy(this.show, this));
-        } else {
-            this.element.on('click', $.proxy(this.show, this));
-        }
-
-
+        var now = moment();
+        this.mm = now.month();
+        this.yy = now.year();
+        this.today = now.date();
+        this.middleDay = now;
 
         this.renderCalendar(getSevenDays(now));
 
     };
 
-
-    // ajax     url/months days 
-    Plugin.prototype.loadEvents = function () {
-        //        if(!(this.events === null)){
-        //            if(typeof this.events == 'function'){
-        //                this.renderEvents(this.events.apply(this, []), this.calendar);
-        //            }
-        //        }
-    };
-
     Plugin.prototype.renderCalendar = function (daylist) {
-        
+
         if (this.calendar) {
             $(".timeline").remove();
-            
             $("#accordion_event_table").remove();
         }
 
-        
-
         var that = this;
-        var elt =tmpl(events_list_template);
-        
-        
+        var elt = tmpl(events_list_template);
+
+
         this.calendar = $(timeline_template({
             seven_day: daylist
         }))
             .appendTo(this.element).on({
-            click: $.proxy(this.click, this)
-        });
+                click: $.proxy(this.click, this)
+            });
         $.ajax({
+            type: "POST",
             url: this.url,
             data: {
                 "days": _.map(daylist, function (k) {
-                    // return k.toString();
-										return k.toDateString();
+                    return moment(k).utc().format();
                 })
 
             },
-            //crossDomain:true,
-            dataType: "jsonp",
-        }).done(function (data) {
-            if (data.result.length > 0) {
-                that.events = data;
-               // console.log("data", data);
-               // console.log(" that.events ", that.events.result.length);
-                var v ={
-                    seven_day_events: that.events.result
+            // crossDomain:true,
+            dataType: "json",
+            jsonp: false
+
+        }).done(function (da) {
+
+            if (da.length > 0) {
+
+                var days = _.map(daylist, function (k) {
+                    return moment(k).utc().format();
+                });
+                that.events = _.map(days, function (date) {
+                    return _.filter(da, function (re) {
+                        return moment(re.date).date() == moment(date).date();
+                    }
+                        );
+
+                });
+
+                var v = {
+
+                    seven_day_events: that.events
                 }
-               // console.log(v);
-                $(elt( v)).appendTo(that.element)
+                // console.log(v);
+                $(elt(v)).appendTo(that.element)
 
             }
 
+
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            // console.log(textStatus);
         });
 
     };
@@ -356,21 +294,24 @@
         e.stopPropagation();
         e.preventDefault();
         var target = $(e.target).closest('li');
-        console.log("click " + this.middleDay);
         if (target.length == 1) {
             if (target.is('.pre')) {
 
                 if (target.is('.fast')) {
-                    this.renderCalendar(getSevenDays(momentthis.middleDay.getDate() - 7)));
+                    this.middleDay = moment(this.middleDay).subtract('d', 7);
+                    this.renderCalendar(getSevenDays(this.middleDay));
                 } else {
-                    this.renderCalendar(getSevenDays(this.middleDay.setDate(this.middleDay.getDate() - 1)));
+                    this.middleDay = moment(this.middleDay).subtract('d', 1);
+                    this.renderCalendar(getSevenDays(this.middleDay));
                 }
             } else if (target.is('.next')) {
 
                 if (target.is('.fast')) {
-                    this.renderCalendar(getSevenDays(this.middleDay.setDate(this.middleDay.getDate() + 7)));
+                    this.middleDay = moment(this.middleDay).add('d', 7);
+                    this.renderCalendar(getSevenDays(this.middleDay));
                 } else {
-                    this.renderCalendar(getSevenDays(this.middleDay.setDate(this.middleDay.getDate() + 1)));
+                    this.middleDay = moment(this.middleDay).add('d', 7);
+                    this.renderCalendar(getSevenDays(this.middleDay));
                 }
 
             }
@@ -378,19 +319,17 @@
 
 
     };
- 
+
     var getSevenDays = function (middleDay) {
 
-        var daylist = [];
-        var startDay = new Date(middleDay).getDate();
-        for (var n = 0, m = startDay - Math.floor(7 / 2); n < 7; n++, m++) {
-            (function (n, m) {
-                var d = (new Date()).setDate(m);
-                daylist.push(new Date(d));
-            })(n, m);
-        }
+        var daylist = new Array();
+        var startDay = moment(middleDay).subtract('d', Math.floor(7 / 2));
 
+        _(7).times(function (n) {
+            var ss = startDay.add('d', 1);
+            daylist.push(moment(ss));
 
+        });
         return daylist;
     };
 

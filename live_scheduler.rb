@@ -38,24 +38,46 @@ class LiveScheduler < Sinatra::Base
   get '/' do
     File.read(File.join('demo', 'demo.html'))
   end
-
-  get '/schedule' do
+  post '/schedule' do
     data ={:result=>[
       {
       :date => "2013-06-2",
-      :events=>[
+      :LiveInfo=>[
         {:time =>"30:00",:title=>"title for this one", :status=>"onlive", :classroom=>"class 1", :course=>"course 1"},
         {:time =>"50:00",:title=>"title for this one", :status=>"wait", :classroom=>"class 2", :course=>"course 1"}
     ]},
       {
       :date => "2013-06-8",
-      :events=>[
+      :LiveInfo=>[
         {:time =>"30:00",:title=>"title for this one",:status=>"wait",:classroom=>"class 2", :course=>"course 1"},
         {:time =>"50:00",:title=>"title for this one",:status=>"onlive",:classroom=>"class 3",:course=>"course 2"}
     ]},
       {
       :date => "2013-06-4",
-      :events=>[
+      :LiveInfo=>[
+        {:time =>"30:00",:title=>"title for this one",:status=>"onlive",:classroom=>"class 2",:course=>"course 2"},
+        {:time =>"50:00",:title=>"title for this one",:status=>"outday",:classroom=>"class 1",:course=>"course 1"}
+    ]}
+    ]}
+  end
+    
+  get '/schedule' do
+    data ={:result=>[
+      {
+      :date => "2013-06-2",
+      :LiveInfo=>[
+        {:time =>"30:00",:title=>"title for this one", :status=>"onlive", :classroom=>"class 1", :course=>"course 1"},
+        {:time =>"50:00",:title=>"title for this one", :status=>"wait", :classroom=>"class 2", :course=>"course 1"}
+    ]},
+      {
+      :date => "2013-06-8",
+      :LiveInfo=>[
+        {:time =>"30:00",:title=>"title for this one",:status=>"wait",:classroom=>"class 2", :course=>"course 1"},
+        {:time =>"50:00",:title=>"title for this one",:status=>"onlive",:classroom=>"class 3",:course=>"course 2"}
+    ]},
+      {
+      :date => "2013-06-4",
+      :LiveInfo=>[
         {:time =>"30:00",:title=>"title for this one",:status=>"onlive",:classroom=>"class 2",:course=>"course 2"},
         {:time =>"50:00",:title=>"title for this one",:status=>"outday",:classroom=>"class 1",:course=>"course 1"}
     ]}
@@ -69,14 +91,12 @@ class LiveScheduler < Sinatra::Base
               Date.parse(day).to_s }
               puts selectDays
            data[:result].each {|re| 
-             # puts re[:date]
-             
-             for elem in selectDays
+               for elem in selectDays
                output[:result].push re if elem == re[:date]
              end
               }
-              puts output[:result]
-         
+          puts output[:result]
+                             
          data[:result].each {|re| output[:result].push re}
     end
     
