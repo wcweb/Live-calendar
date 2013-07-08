@@ -172,11 +172,13 @@
 						'<li class="event_classroom"><%= sde.LiveInfo[jx].classroom%></li>' +
 						'<li class="event_course"><%= sde.LiveInfo[jx].course.substring(0,6) %></li>' +
             '</li>' +
-						' <% if( sde.LiveInfo[jx].status !=null ){ %>'+
+						
             ' <li class="event_status" style="background-color:<%= sde.LiveInfo[jx].color %>' +
-            ' <a href="#" class="btn"><%= sde.LiveInfo[jx].status %></a>' +
+						' <% if( sde.LiveInfo[jx].status !=null ){ %>'+
+            ' <%= sde.LiveInfo[jx].status %>' +
+						' <% } %>' +
             ' </li>' +
-						'<% } %>' +
+						
             ' </ul>' +
 						'<% } %>' +
 		        '<% } %>' +
