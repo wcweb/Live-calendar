@@ -16,78 +16,6 @@
 ;
 (function ($, window, document, undefined) {
 
-
-
-
-
-    /**
-     * 微型模板引擎 tmpl 0.2
-     *
-     * 0.2 更新:
-     * 1. 修复转义字符与id判断的BUG
-     * 2. 放弃低效的 with 语句从而最高提升3.5倍的执行效率
-     * 3. 使用随机内部变量防止与模板变量产生冲突
-     *
-     * @author	John Resig, Tang Bin
-     * @see		http://ejohn.org/blog/javascript-micro-templating/
-     * @name	tmpl
-     * @param	{String}	模板内容或者装有模板内容的元素ID
-     * @param	{Object}	附加的数据
-     * @return	{String}	解析好的模板
-     *
-     * @example
-     * 方式一：在页面嵌入模板
-     * <script type="text/tmpl" id="tmpl-demo">
-     * <ol title="<%=name%>">
-     * 	<% for (var i = 0, l = list.length; i < length; i ++) { %>
-     * 		<li><%=list[i]%></li>
-     * 	<% } %>
-     * </ol>
-     * </script>
-     * tmpl('tmpl-demo', {name: 'demo data', list: [202, 96, 133, 134]})
-     * 
-     * 方式二：直接传入模板：
-     * var demoTmpl =
-     * '<ol title="<%=name%>">'
-     * + '<% for (var i = 0, l = list.length; i < length; i ++) { %>'
-     * +	'<li><%=list[i]%></li>'
-     * + '<% } %>'
-     * +'</ol>';
-     * var render = tmpl(demoTmpl);
-     * render({name: 'demo data', list: [202, 96, 133, 134]});
-     * 
-     * 这两种方式区别在于第一个会自动缓存编译好的模板，
-     * 而第二种缓存交给外部对象控制，如例二中的 render 变量。
-     */
-
-    //    var tmpl = (function (cache, $) {
-    //        return function (str, data) {
-    //            var fn = !/s/.test(str) ? cache[str] = cache[str] || tmpl(document.getElementById(str).innerHTML)
-    //
-    //            : function (data) {
-    //                    var i, variable = [$],
-    //                        value = [[]];
-    //                    for (i in data) {
-    //                        variable.push(i);
-    //                        value.push(data[i]);
-    //                    };
-    //                    return (new Function(variable, fn.$)).apply(data, value).join("");
-    //                };
-    //
-    //            fn.$ = fn.$ || $ + ".push('" + str.replace(/\\/g, "\\")
-    //                .replace(/ [rtn] /g, " ")
-    //                .split("<%").join("t")
-    //                .replace(/((^|%>)[^t]*)'/g, "$1r")
-    //                .replace(/t=(.*?)%>/g, "',$1,'")
-    //                .split("t").join("');")
-    //                .split("%>").join($ + ".push('")
-    //                .split("r").join("\'") + "');return " + $;
-    //
-    //            return data ? fn(data) : fn;
-    //        }
-    //    })({}, '$' + (+new Date));
-    // Simple JavaScript Templating
-    // John Resig - http://ejohn.org/ - MIT Licensed
     (function () {
         var cache = {};
 
@@ -170,15 +98,13 @@
             '<a href="<%= sde.LiveInfo[jx].url %>"><%= sde.LiveInfo[jx].title.substring(0,10) %></a>' +
 						'<li class="event_time"><%= sde.LiveInfo[jx].time%></li>' +
 						'<li class="event_classroom"><%= sde.LiveInfo[jx].classroom%></li>' +
-						'<li class="event_course"><%= sde.LiveInfo[jx].course.substring(0,6) %></li>' +
+						'<li class="event_course"><%= sde.LiveInfo[jx].course %></li>' +
             '</li>' +
-						
-            ' <li class="event_status" style="background-color:<%= sde.LiveInfo[jx].color %>' +
 						' <% if( sde.LiveInfo[jx].status !=null ){ %>'+
+            ' <li style="background-color:<%= sde.LiveInfo[jx].color %>;">' +
             ' <%= sde.LiveInfo[jx].status %>' +
-						' <% } %>' +
             ' </li>' +
-						
+						'<% } %>' +
             ' </ul>' +
 						'<% } %>' +
 		        '<% } %>' +
@@ -193,11 +119,6 @@
     function Plugin(element, options) {
         this.element = $(element);
 
-        // jQuery has an extend method that merges the
-        // contents of two or more objects, storing the
-        // result in the first object. The first object
-        // is generally empty because we don't want to alter
-        // the default options for future instances of the plugin
         this.options = $.extend({}, defaults, options);
 
         this._defaults = defaults;
