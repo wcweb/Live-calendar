@@ -5,17 +5,26 @@ require 'slim'
 require 'json'
 require 'sinatra/jsonp'
 
+require "better_errors"
+
+
+
 class LiveScheduler < Sinatra::Base
   helpers Sinatra::Jsonp
-  configure do
+  
+  configure :development do
+    use BetterErrors::Middleware
+            BetterErrors.application_root =  File.dirname(__FILE__)
     enable :static
-    enable :sessions
+    # enable :sessions
 
     set :views, File.join(File.dirname(__FILE__), 'views')
     set :public_folder, File.join(File.dirname(__FILE__), '')
     set :files, File.join(settings.public_folder, 'files')
     set :unallowed_paths, ['.', '..']
   end
+  
+
 
   helpers do
     def flash(message = '')
@@ -87,21 +96,19 @@ class LiveScheduler < Sinatra::Base
     output ={:result=>[]}
     if params[:days] 
       
-      selectDays = params[:days].collect { |day| 
-              Date.parse(day).to_s }
-              puts selectDays
-           data[:result].each {|re| 
-               for elem in selectDays
-               output[:result].push re if elem == re[:date]
-             end
-              }
-          puts output[:result]
-                             
-         data[:result].each {|re| output[:result].push re}
+      selectDays = params[:days].collect { |day|  Date.parse(day).to_s }
+      
+      # data[:result].each {|re| 
+      #         for elem in selectDays
+      #            output[:result].push re #if elem == re[:date]
+      #         end
+      #       }
+                    
+      data[:result].each {|re| output[:result].push re}
     end
     
 
-    jsonp output
+    jsonp data
   end
 
 
