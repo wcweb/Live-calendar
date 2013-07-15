@@ -6,7 +6,7 @@
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
         <meta content="" name="description">
         <meta content="" name="author">
-        <link rel="stylesheet" href="demo/css/bootstrap.css" type="text/css" />
+        <link rel="stylesheet" href="demo/ava.css" type="text/css" />
         <style>
             body {
                 padding-top: 60px;
@@ -14,6 +14,7 @@
             }
         </style>
         <link rel="stylesheet" href="../src/css/live.calendar.css" type="text/css" />
+				<link rel="stylesheet" href="demo/js/DT_bootstrap/DT_bootstrap.css" type="text/css" />
         <!-- jQuery and the Calendar plugin files -->
         <script type="text/javascript" src="demo/js/jquery.js"></script>
         <script type="text/javascript" src="demo/js/bootstrap.js"></script>
@@ -21,14 +22,27 @@
 				<script type="text/javascript" src="demo/js/moment.min.js"></script>
 				<script type="text/javascript" src="demo/js/zh-cn.js"></script>
         <script type="text/javascript" src="../src/live.calendar.js"></script>
+
+				<script src="demo/js/DT_bootstrap/jquery.dataTables.js" type="text/javascript" charset="utf-8"></script>
+				<script src="demo/js/DT_bootstrap/DT_bootstrap.js" type="text/javascript" charset="utf-8"></script>
+				
         <script type="text/javascript">
             var result = "first ";
             $(document).ready(function() {       
-                /* $('#live_schedule').LiveScheduler({url:'http://0.0.0.0:9393/schedule'}); */
-
-                /* $('#live_schedule').LiveScheduler({url:'http://127.0.0.1:9393/schedule'}); */
-                $('#live_schedule').LiveScheduler({url:'http://127.0.0.1:9292/schedule'});
-									$(function () {$("#days_tabs a:first").tab("show")});
+               
+                $('#live_schedule').LiveScheduler({url:window.location.origin+'/schedule'});
+								
+									
+									// $('.live_tables').dataTable( {
+									// 									"bRetrieve":true,
+									// 									"sDom": "<'row'<'span4'l><'span4'f>r>t<'row'<'span4'i><'span4'p>>",
+									// 									"sPaginationType": "bootstrap",
+									// 									//"aaSorting": [0, 'asc'],
+									// 									"oLanguage": {
+									// 										"sLengthMenu": "_MENU_ 条记录 每一页"
+									// 									}
+									// 								} );
+									
             });
         </script>
     </head>
@@ -63,9 +77,8 @@
         <div class="container">
             <div class="row">
                 
-										
-										
-                <div class="span10">
+									
+                <div class="span14">
                                                 <div class="live_schedule hor" id="live_schedule">
                                                     
                                             </div>

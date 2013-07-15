@@ -62,21 +62,20 @@
         },
 					// .aweek.btn-group>operator+date_id
         timeline_template = tmpl(
-            '<ul class="aweek btn-group ">' +
-            '<li class="operator"><ul>' +
+            '<div class=" timeline ">' +
+            '<div class="operator"><ul class="nav nav-pills">' +
             '<li class="fast pre">' +
-            '<a href="#" class="btn">上一周</a>' +
+            '<a href="#" class="">上一周</a>' +
             '</li>' +
-            '<li class="divid"></li>' +
             '<li class="pre">' +
-            '<a href="#" class="btn">&lt</a>' +
+            '<a href="#" class="">&lt</a>' +
             '</li>' +
             '<li class="next">' +
-            '<a href="#" class="btn">&gt</a>' +
+            '<a href="#" class="">&gt</a>' +
             '</li>' +
             '<li class="fast next">' +
-            '<a href="#" class="btn">下一周</a>' +
-            '</li></ul></li></ul>'),
+            '<a href="#" class="">下一周</a>' +
+            '</li></ul></div></div>'),
 			 days_template = tmpl(
 						'<ul class="nav nav-tabs" id="days_tabs">'+
              '<% for (var i = 0, length = seven_day.length; i < length; i ++) { %>' +
@@ -94,27 +93,29 @@
         '<% for (var ix = 0, lengthx = seven_day_events.length; ix < lengthx; ix ++) { %>' +
             '<div class="tab-pane" id="d<%= r_days[ix].format("D") %>">' +
             '<% if (seven_day_events[ix].length>0){ %>' +
-						
-        '<% for (var jx = 0 ,sde=seven_day_events[ix][0], lengthy = seven_day_events[ix][0].LiveInfo.length; jx < lengthy; jx ++) { %>' +
-            ' <ul class="event">' +
-            
-            '<li class="event_title">' +
-            '<a href="<%= sde.LiveInfo[jx].url %>"><%= sde.LiveInfo[jx].title.substring(0,10) %></a>' +
-            '<li class="event_time"><%= sde.LiveInfo[jx].time%></li>' +
-            '<li class="event_classroom"><%= sde.LiveInfo[jx].classroom%></li>' +
-            '<li class="event_course"><%= sde.LiveInfo[jx].course %></li>' +
-            '</li>' +
-            ' <% if( sde.LiveInfo[jx].status !=null ){ %>'+
-            ' <li style="background-color:<%= sde.LiveInfo[jx].color %>;">' +
-            ' <%= sde.LiveInfo[jx].status %>' +
-            ' </li>' +
-            '<% } %>' +
-            ' </ul>' +
-            '<% } %>' +
-					
-            '<% } %>' +
-            '</div>' +
-            '<% } %>',
+							'<table class="table live_table">'+
+							'<thead><tr><th>课程名称</th><th>授课老师</th><th>授课时间</th><th>授课地点</th><th>状态</th><th>操作</th></tr></thead><tbody>'+
+	        			'<% for (var jx = 0 ,sde=seven_day_events[ix][0], lengthy = seven_day_events[ix][0].LiveInfo.length; jx < lengthy; jx ++) { %>' +
+		            	' <tr class="event">' +
+			            '<td class="event_course"><%= sde.LiveInfo[jx].course %></td>' +
+			            '<td class="event_title">' +
+			            '<a href="<%= sde.LiveInfo[jx].url %>"><%= sde.LiveInfo[jx].title.substring(0,10) %></a>' +
+			            '</td>'+
+									'<td class="event_time"><%= sde.LiveInfo[jx].time%></td>' +
+			            '<td class="event_classroom"><%= sde.LiveInfo[jx].classroom%></td>' +
+			            	' <% if( sde.LiveInfo[jx].status !=null ){ %>'+
+				            ' <td style="background-color:<%= sde.LiveInfo[jx].color %>;">' +
+				            ' <%= sde.LiveInfo[jx].status %>' +
+				            ' </td>' +
+				            '<td><a href="#">直播/回放</a></td>' +
+				            '<% } %>' +
+			            ' </tr>' +
+		            '<% } %>' +
+							'</tbody></table>' +
+						//'no data'+
+						'<% } else { %>'+'当天没有直播信息！'+'<% }%>'+ 
+						'</div>'+ //end if
+						'<% } %>',// end for
         daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
 
         today = new Date();
@@ -165,9 +166,11 @@
         this.calendar = $(days_template({
             seven_day: daylist
         })).appendTo(this.element);
-				this.timeline = $(timeline_template({})).prependTo(this.element).on({
+				this.timeline = $(timeline_template({})).appendTo(this.element).on({
                 click: $.proxy(this.click, this)
             });
+				this.calendar.on({click:$.proxy(this.click,this)});
+				
         $.ajax({
             type: "POST",
             url: this.url,
@@ -205,14 +208,13 @@
               });
 
               var v = {seven_day_events: that.events,r_days:daylist}
-              console.log(v);
+              //console.log(v);
               $(elt(v)).appendTo(that.element)
-
+							$("#days_tabs a:first").tab("show");
             }
 						
-            $("#days_tabs a:first").tab("show");
-
-
+            
+						
         }).fail(function (jqXHR, textStatus, errorThrown) {
             // console.log(textStatus);
         });
@@ -243,7 +245,19 @@
                     this.renderCalendar(getSevenDays(this.middleDay));
                 }
 
-            } 
+            } else if(target.is('.select_day')){
+										$(target).children('a').tab("show");
+									
+										$($(target).children('a').attr("href")).children('.live_table').dataTable( {
+																													//$('.live_table').dataTable( {
+											"bRetrieve":true,
+											"sDom": "<'row'<'span4'l><'span5 pull-right'f>r>t<'row'<'span4'i><'span5 pull-right'p>>",
+											"sPaginationType": "bootstrap",
+											"oLanguage": {
+												"sLengthMenu": "_MENU_ 条记录 每一页"
+											}
+										} );
+						}
         }
 
 

@@ -12,40 +12,24 @@
 .live_schedule ul {
     list-style:none;
 }
-.timeline {
-
-    text-align:left;
+.live_schedule .nav-tabs{
+	border-bottom:3px solid #FFC000;
 }
-
-.timeline .aweek {
-    margin: 0;
+.live_schedule .nav-tabs > li{
 	
-letter-spacing:-4px;
-
-
-font-size:0;
 }
-.timeline .aweek li {
-	margin:0px;
-	letter-spacing:normal;
+.live_schedule .nav-tabs > li > a{
+	border:1px solid #ccc;
+	border-bottom:transparent;
 }
-.aweek li a.btn{
-	width: 90px;
+.live_schedule .nav-tabs >li.active > a,
+.live_schedule .nav-tabs >li > a:active,
+.live_schedule .nav-tabs >li > a:hover{
+	color:#fff;
+	background:#FFC000;
 }
-.timeline .aweek .pre{
-
-}
-.timeline .aweek .today{
-    background:#fcfcfc;
-    line-height:30px;
-    
-}
-.timeline .aweek .today a{
-    display:block;
-}
-
-.timeline .aweek .next{
-
+.timeline {
+	position:relative;
 }
 .event_table {
     position:absolute;
@@ -77,9 +61,9 @@ font-size:0;
 }
 .event_row_oper {
 }
-.event {
+/*.event {
     margin:0;
-/*    background:#FCFCFC;*/
+    background:#FCFCFC;
     margin-bottom: 15px;
     position:relative;
 		
@@ -104,15 +88,10 @@ li.event_status {
     right:0;
     width:220px;
     margin:5px;
-}
+}*/
 
 .live_schedule.hor{
 	
-}
-.hor .timeline{
-	position:relative;
-	width:auto;
-	height:60px;
 }
 .hor .event_table{
 	position:relative;
@@ -144,21 +123,8 @@ ul.aweek li{
 }
 
 
-.hor .timeline .aweek li.operator{
-	width:100%;
-	display:block;
-	padding-right:0px;
-}
-.operator ul{
-	width:100%;
-	margin-left:0;
-	overflow:hidden;
-}
-.timeline .aweek li.operator .pre{
-	float:left;
-	width:auto;
-}
-.timeline .aweek li.operator .next{
-	float:right;
-	width:auto;
+.operator{
+	position:absolute;
+	top:-60px;
+	right:10px;
 }
