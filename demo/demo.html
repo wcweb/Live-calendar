@@ -26,7 +26,9 @@
             $(document).ready(function() {       
                 /* $('#live_schedule').LiveScheduler({url:'http://0.0.0.0:9393/schedule'}); */
 
-                $('#live_schedule').LiveScheduler({url:'http://127.0.0.1:9393/schedule'});
+                /* $('#live_schedule').LiveScheduler({url:'http://127.0.0.1:9393/schedule'}); */
+                $('#live_schedule').LiveScheduler({url:'http://127.0.0.1:9292/schedule'});
+									$(function () {$("#days_tabs a:first").tab("show")});
             });
         </script>
     </head>
@@ -61,10 +63,12 @@
         <div class="container">
             <div class="row">
                 
+										
+										
                 <div class="span10">
-                    <div class="live_schedule hor" id="live_schedule">
-                        
-                </div>
+                                                <div class="live_schedule hor" id="live_schedule">
+                                                    
+                                            </div>
             </div>
             <!-- /container -->
     </body>

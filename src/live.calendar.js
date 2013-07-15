@@ -13,7 +13,7 @@
 // the semi-colon before the function invocation is a safety
 // net against concatenated scripts and/or other plugins
 // that are not closed properly.
-;
+// ;
 (function ($, window, document, undefined) {
 
     (function () {
@@ -60,13 +60,14 @@
             url: "",
             events: null
         },
-        timeline_template = tmpl('<div class="timeline">' +
-            '<ul class="aweek btn-group">' +
-						'<li class="operator"><ul>' +
-						'<li class="fast pre">' +
+					// .aweek.btn-group>operator+date_id
+        timeline_template = tmpl(
+            '<ul class="aweek btn-group ">' +
+            '<li class="operator"><ul>' +
+            '<li class="fast pre">' +
             '<a href="#" class="btn">上一周</a>' +
             '</li>' +
-						'<li class="divid"></li>' +
+            '<li class="divid"></li>' +
             '<li class="pre">' +
             '<a href="#" class="btn">&lt</a>' +
             '</li>' +
@@ -75,40 +76,44 @@
             '</li>' +
             '<li class="fast next">' +
             '<a href="#" class="btn">下一周</a>' +
-            '</li></ul></li>' +
-						 '<% for (var i = 0, length = seven_day.length; i < length; i ++) { %>' +
-	            '<li class="" id="day_<%= seven_day[i] %>">' +
-	            '<a href="#" class="btn"> <%= seven_day[i].format("ddd") %><br/><%= seven_day[i].date() %></a>' +
-	            '</li>' +
-	            '<% } %>' +
+            '</li></ul></li></ul>'),
+			 days_template = tmpl(
+						'<ul class="nav nav-tabs" id="days_tabs">'+
+             '<% for (var i = 0, length = seven_day.length; i < length; i ++) { %>' +
+              '<li class="select_day">' +
+              '<a href="#d<%= seven_day[i].format("D") %>"  data-toggle="tab"><%= seven_day[i].format("ddd") %><br/> <%= seven_day[i].format("MMM Do") %></a>' +
+              '</li>' +
+              '<% } %>' +
+						'</ul>'+
 
-            '</ul>' +
-            '</div>'),
+            '</ul>' ),
 
        
-				events_list_template = '<div class="event_table accordion" id="accordion_event_table" >' +
+        events_list_template = '<div class="tab-content" id="accordion_event_table" >' +
 
         '<% for (var ix = 0, lengthx = seven_day_events.length; ix < lengthx; ix ++) { %>' +
-						'<div class="col">' +
-						'<% if (seven_day_events[ix].length>0){ %>' +
-				'<% for (var jx = 0 ,sde=seven_day_events[ix][0], lengthy = seven_day_events[ix][0].LiveInfo.length; jx < lengthy; jx ++) { %>' +
+            '<div class="tab-pane" id="d<%= r_days[ix].format("D") %>">' +
+            '<% if (seven_day_events[ix].length>0){ %>' +
+						
+        '<% for (var jx = 0 ,sde=seven_day_events[ix][0], lengthy = seven_day_events[ix][0].LiveInfo.length; jx < lengthy; jx ++) { %>' +
             ' <ul class="event">' +
             
             '<li class="event_title">' +
             '<a href="<%= sde.LiveInfo[jx].url %>"><%= sde.LiveInfo[jx].title.substring(0,10) %></a>' +
-						'<li class="event_time"><%= sde.LiveInfo[jx].time%></li>' +
-						'<li class="event_classroom"><%= sde.LiveInfo[jx].classroom%></li>' +
-						'<li class="event_course"><%= sde.LiveInfo[jx].course %></li>' +
+            '<li class="event_time"><%= sde.LiveInfo[jx].time%></li>' +
+            '<li class="event_classroom"><%= sde.LiveInfo[jx].classroom%></li>' +
+            '<li class="event_course"><%= sde.LiveInfo[jx].course %></li>' +
             '</li>' +
-						' <% if( sde.LiveInfo[jx].status !=null ){ %>'+
+            ' <% if( sde.LiveInfo[jx].status !=null ){ %>'+
             ' <li style="background-color:<%= sde.LiveInfo[jx].color %>;">' +
             ' <%= sde.LiveInfo[jx].status %>' +
             ' </li>' +
-						'<% } %>' +
+            '<% } %>' +
             ' </ul>' +
-						'<% } %>' +
-		        '<% } %>' +
-							'</div>' +
+            '<% } %>' +
+					
+            '<% } %>' +
+            '</div>' +
             '<% } %>',
         daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
 
@@ -125,7 +130,7 @@
         this._name = pluginName;
 
         this.init();
-    };
+    }
 
     Plugin.prototype.init = function () {
         // Place initialization logic here
@@ -153,20 +158,14 @@
     };
 
     Plugin.prototype.renderCalendar = function (daylist) {
-
-        if (this.calendar) {
-            $(".timeline").remove();
-            $("#accordion_event_table").remove();
-        }
+				$(this.element).contents().remove();
 
         var that = this;
         var elt = tmpl(events_list_template);
-
-
-        this.calendar = $(timeline_template({
+        this.calendar = $(days_template({
             seven_day: daylist
-        }))
-            .appendTo(this.element).on({
+        })).appendTo(this.element);
+				this.timeline = $(timeline_template({})).prependTo(this.element).on({
                 click: $.proxy(this.click, this)
             });
         $.ajax({
@@ -182,29 +181,36 @@
             dataType: "json",
             jsonp: false
 
-        }).done(function (da) {
+        }).done(function (results) {
 
-            if (da.length > 0) {
+						if(typeof results == "object"){
+							var res_dates= results.result;
+						}
+						if(typeof results == "array"){
+							var res_dates= results;
+						}
+							
+						if (res_dates.length > 0) {
+              var req_days = _.map(daylist, function (k) {
+                  return moment(k).utc().format();
+              });
 
-                var days = _.map(daylist, function (k) {
-                    return moment(k).utc().format();
-                });
-                that.events = _.map(days, function (date) {
-                    return _.filter(da, function (re) {
-                        return moment(re.date).date() == moment(date).date();
-                    }
-                        );
+              that.events = _.map(req_days, function (req_date) {
+                  return _.filter(res_dates, function (res) {
+											res.date= moment(res.date);
+                      return res.date.date() == moment(req_date).date();
+                  }
+                      );
+									
+              });
 
-                });
-
-                var v = {
-
-                    seven_day_events: that.events
-                }
-                // console.log(v);
-                $(elt(v)).appendTo(that.element)
+              var v = {seven_day_events: that.events,r_days:daylist}
+              console.log(v);
+              $(elt(v)).appendTo(that.element)
 
             }
+						
+            $("#days_tabs a:first").tab("show");
 
 
         }).fail(function (jqXHR, textStatus, errorThrown) {
@@ -237,7 +243,7 @@
                     this.renderCalendar(getSevenDays(this.middleDay));
                 }
 
-            }
+            } 
         }
 
 

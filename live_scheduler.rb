@@ -4,8 +4,9 @@ require 'sinatra/base'
 require 'slim'
 require 'json'
 require 'sinatra/jsonp'
+# require 'puma'
 
-require "better_errors"
+# require "better_errors"
 
 
 
@@ -13,10 +14,12 @@ class LiveScheduler < Sinatra::Base
   helpers Sinatra::Jsonp
   
   configure :development do
-    use BetterErrors::Middleware
-            BetterErrors.application_root =  File.dirname(__FILE__)
+    # use BetterErrors::Middleware
+    # BetterErrors.application_root =  File.dirname(__FILE__)
     enable :static
-    # enable :sessions
+    enable :sessions
+
+    set :server, :puma
 
     set :views, File.join(File.dirname(__FILE__), 'views')
     set :public_folder, File.join(File.dirname(__FILE__), '')
@@ -50,24 +53,27 @@ class LiveScheduler < Sinatra::Base
   post '/schedule' do
     data ={:result=>[
       {
-      :date => "2013-06-2",
+      :date => "2013-07-12",
       :LiveInfo=>[
         {:time =>"30:00",:title=>"title for this one", :status=>"onlive", :classroom=>"class 1", :course=>"course 1"},
         {:time =>"50:00",:title=>"title for this one", :status=>"wait", :classroom=>"class 2", :course=>"course 1"}
     ]},
       {
-      :date => "2013-06-8",
+      :date => "2013-07-18",
       :LiveInfo=>[
         {:time =>"30:00",:title=>"title for this one",:status=>"wait",:classroom=>"class 2", :course=>"course 1"},
         {:time =>"50:00",:title=>"title for this one",:status=>"onlive",:classroom=>"class 3",:course=>"course 2"}
     ]},
       {
-      :date => "2013-06-4",
+      :date => "2013-07-14",
       :LiveInfo=>[
         {:time =>"30:00",:title=>"title for this one",:status=>"onlive",:classroom=>"class 2",:course=>"course 2"},
         {:time =>"50:00",:title=>"title for this one",:status=>"outday",:classroom=>"class 1",:course=>"course 1"}
     ]}
     ]}
+
+    jsonp data
+
   end
     
   get '/schedule' do
@@ -94,21 +100,22 @@ class LiveScheduler < Sinatra::Base
     
     
     output ={:result=>[]}
-    if params[:days] 
-      
-      selectDays = params[:days].collect { |day|  Date.parse(day).to_s }
-      
-      # data[:result].each {|re| 
-      #         for elem in selectDays
-      #            output[:result].push re #if elem == re[:date]
-      #         end
-      #       }
-                    
-      data[:result].each {|re| output[:result].push re}
-    end
+    # if params[:days] 
+    #   
+    #   selectDays = params[:days].collect { |day|  Date.parse(day).to_s }
+    #   
+    #   # data[:result].each {|re| 
+    #   #         for elem in selectDays
+    #   #            output[:result].push re #if elem == re[:date]
+    #   #         end
+    #   #       }
+    #                 
+    #   data[:result].each {|re| output[:result].push re}
+    # end
     
-
+    # jsonp output
     jsonp data
+    "lab update"
   end
 
 
