@@ -58,6 +58,7 @@
             msg_today: 'Today',
             msg_events_today: 'Events Today', // when today click.
             url: "",
+            currentday:null,
             events: null
         },
 					// .aweek.btn-group>operator+date_id
@@ -79,8 +80,8 @@
 			 days_template = tmpl(
 						'<ul class="nav nav-tabs" id="days_tabs">'+
              '<% for (var i = 0, length = seven_day.length; i < length; i ++) { %>' +
-              '<li class="select_day">' +
-              '<a href="#d<%= seven_day[i].format("D") %>"  data-toggle="tab"><%= seven_day[i].format("ddd") %><br/> <%= seven_day[i].format("MMM Do") %></a>' +
+              '<li class="select_day select_by_<%= seven_day[i].format("D") %>" >' +
+              '<a href="#d<%= seven_day[i].format("D") %>"  data-toggle="tab"><%= seven_day[i].format("dddd") %><br/> <%= seven_day[i].format("MM-DD") %></a>' +
               '</li>' +
               '<% } %>' +
 						'</ul>'+
@@ -138,28 +139,24 @@
         // You already have access to the DOM element and
         // the options via the instance, e.g. this.element
         // and this.options
+        var now = moment();
         this.weekStart = this.options.weekStart || 1;
-        this.days = this.options.msg_days;
-        this.months = this.options.msg_months;
-        this.msg_today = this.options.msg_today;
-        this.msg_events_hdr = this.options.msg_events_header;
-        this.events = this.options.events;
+
         this.url = this.options.url;
 
-        this.live_date = new Date();
+        this.currentday = this.options.currentday ? this.options.currentday: now;
 
-        var now = moment();
-        this.mm = now.month();
-        this.yy = now.year();
-        this.today = now.date();
-        this.middleDay = now;
 
-        this.renderCalendar(getSevenDays(now));
+        
+
+        console.log(this.currentday);
+        this.renderCalendar(getSevenDays(this.currentday));
+        $("#days_tabs .select_by_"+moment(this.currentday).format("D")+" a").tab("show");
 
     };
 
     Plugin.prototype.renderCalendar = function (daylist) {
-				$(this.element).contents().remove();
+		$(this.element).contents().remove();
 
         var that = this;
         var elt = tmpl(events_list_template);
@@ -185,15 +182,16 @@
             jsonp: false
 
         }).done(function (results) {
-
-						if(typeof results == "object"){
-							var res_dates= results.result;
-						}
-						if(typeof results == "array"){
-							var res_dates= results;
-						}
-							
-						if (res_dates.length > 0) {
+            //console.log(results);
+			if(typeof results == "object"){
+				var res_dates= results.result;
+                if (res_dates == undefined){return false;}
+			}
+			if(typeof results == "array"){
+				var res_dates= results;
+			}
+			
+			if (res_dates.length > 0) {
               var req_days = _.map(daylist, function (k) {
                   return moment(k).utc().format();
               });
@@ -210,7 +208,7 @@
               var v = {seven_day_events: that.events,r_days:daylist}
               //console.log(v);
               $(elt(v)).appendTo(that.element)
-							$("#days_tabs a:first").tab("show");
+
             }
 						
             
@@ -229,20 +227,20 @@
             if (target.is('.pre')) {
 
                 if (target.is('.fast')) {
-                    this.middleDay = moment(this.middleDay).subtract('d', 7);
-                    this.renderCalendar(getSevenDays(this.middleDay));
+                    this.currentday = moment(this.currentday).subtract('d', 7);
+                    this.renderCalendar(getSevenDays(this.currentday));
                 } else {
-                    this.middleDay = moment(this.middleDay).subtract('d', 1);
-                    this.renderCalendar(getSevenDays(this.middleDay));
+                    this.currentday = moment(this.currentday).subtract('d', 1);
+                    this.renderCalendar(getSevenDays(this.currentday));
                 }
             } else if (target.is('.next')) {
 
                 if (target.is('.fast')) {
-                    this.middleDay = moment(this.middleDay).add('d', 7);
-                    this.renderCalendar(getSevenDays(this.middleDay));
+                    this.currentday = moment(this.currentday).add('d', 7);
+                    this.renderCalendar(getSevenDays(this.currentday));
                 } else {
-                    this.middleDay = moment(this.middleDay).add('d', 1);
-                    this.renderCalendar(getSevenDays(this.middleDay));
+                    this.currentday = moment(this.currentday).add('d', 1);
+                    this.renderCalendar(getSevenDays(this.currentday));
                 }
 
             } else if(target.is('.select_day')){
@@ -266,10 +264,9 @@
     var getSevenDays = function (middleDay) {
 
         var daylist = new Array();
-        var startDay = moment(middleDay).subtract('d', Math.floor(7 / 2));
-
+        var startDay = moment(middleDay).subtract('d', 4);
         _(7).times(function (n) {
-            var ss = startDay.add('d', 1);
+            var ss = startDay.add('d', 1);// 
             daylist.push(moment(ss));
 
         });
